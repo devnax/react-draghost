@@ -1,7 +1,7 @@
 import 'react-app-polyfill/ie11';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import { Wrapper, Droppable } from '../.';
+import { DraggableWrapper, Droppable } from '../.';
 
 const Item = ({ color, title }: any) => {
   return (
@@ -56,7 +56,7 @@ const App = () => {
 
   return (
     <div>
-      <Wrapper id={"main"} onDrop={(p) => {
+      <DraggableWrapper id={"main"} onDrop={(p) => {
       }}>
         <div style={{
           display: "flex"
@@ -81,7 +81,7 @@ const App = () => {
             </div>
           </DropBox>
         </div>
-      </Wrapper >
+      </DraggableWrapper >
     </div >
   );
 };

@@ -1,6 +1,5 @@
-import Wrapper from './views/Wrapper'
+import './helpers'
+import DraggableWrapper from './views/DraggableWrapper'
 import Droppable from './views/Droppable'
-export * from './views/Wrapper'
 export * from './types'
-import './style'
-export { Wrapper, Droppable }
+export { DraggableWrapper, Droppable }

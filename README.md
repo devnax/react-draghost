@@ -1,10 +1,10 @@
 ```tsx
-import {Wrapper, Droppable, DroppableProps, WrapperProps} from 'dragula'
+import {DraggableWrapper, Droppable, DroppableProps, WrapperProps} from 'react-draghost'
 
-<Wrapper id="builder" onDrop={() => {}}>
+<DraggableWrapper id="builder" onDrop={() => {}}>
    <Droppable id="a">...</Droppable>
    <Droppable id="b">...</Droppable>
-</Wrapper>
+</DraggableWrapper>
 
 interface WraperProps extends Omit<WrapperProps, 'droppables' | 'instance'> {
    children: ReactElement

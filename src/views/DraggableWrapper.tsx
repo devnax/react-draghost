@@ -6,7 +6,7 @@ interface Props extends Omit<WrapperProps, 'droppables' | 'instance'> {
    children: ReactElement
 }
 
-const Wrapper: FC<Props> = ({ children, id, ...wrapperProps }) => {
+const DraggableWrapper: FC<Props> = ({ children, id, ...wrapperProps }) => {
 
    const prevWrapper = useMemo(() => {
       const pw = getCurrentWrapperID()
@@ -28,5 +28,5 @@ const Wrapper: FC<Props> = ({ children, id, ...wrapperProps }) => {
    )
 }
 
-export default Wrapper
+export default DraggableWrapper
 

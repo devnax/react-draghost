@@ -9,27 +9,6 @@ export const getCurrentWrapperID = () => currentWrapper
 export const getCurrentWrapper = () => WrapperFactory.get(currentWrapper)
 
 
-if (typeof Node === 'function' && Node.prototype) {
-   const originalRemoveChild = Node.prototype.removeChild;
-
-   (Node as any).prototype.removeChild = function (child: Element) {
-      if (child.parentNode !== this) {
-         return child;
-      }
-      const args: any = arguments
-      return originalRemoveChild.apply(this, args);
-   };
-
-   const originalInsertBefore = Node.prototype.insertBefore;
-   (Node as any).prototype.insertBefore = function (newNode: Element, referenceNode: Element) {
-      if (referenceNode && referenceNode.parentNode !== this) {
-         return newNode;
-      }
-      const args: any = arguments
-      return originalInsertBefore.apply(this, args);
-   };
-}
-
 export const refreshBuilder = (wrapperId: string) => {
 
    let wrapper = WrapperFactory.get(wrapperId)
