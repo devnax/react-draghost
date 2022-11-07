@@ -1,6 +1,6 @@
 import { WrapperProps } from './types'
-import dragula from "react-dragula";
-
+import { DragulaOptions, Drake } from 'dragula'
+let dragula: (containers: Element[], options?: DragulaOptions) => Drake;
 let currentWrapper: any = null
 
 export const WrapperFactory = new Map<string, WrapperProps>()
@@ -10,6 +10,13 @@ export const getCurrentWrapper = () => WrapperFactory.get(currentWrapper)
 
 
 export const refreshBuilder = (wrapperId: string) => {
+   if (!dragula) {
+      import('react-dragula').then((mod) => {
+         dragula = (mod.default || mod) as any
+         refreshBuilder(wrapperId)
+      })
+      return
+   }
 
    let wrapper = WrapperFactory.get(wrapperId)
    if (!wrapper) {
