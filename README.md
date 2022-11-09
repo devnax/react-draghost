@@ -63,5 +63,7 @@ interface DroppableProps {
    onOver?: (props: { el: ELE, container: ELE, source: ELE }) => void;
    onOut?: (props: { el: ELE, container: ELE, source: ELE }) => void;
    onCloned?: (props: { clone: ELE, original: ELE, type: 'mirror' | 'copy' }) => void;
+
+   sendData?: (props: { fromIndex: number | null, toIndex: number | null, el: ELE, target: ELE, source: ELE, sibling: ELE }) => any;
 }
 ```

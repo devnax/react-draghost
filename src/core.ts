@@ -173,9 +173,10 @@ export const refreshBuilder = (wrapperId: string) => {
       const targetProps = getProps(target)
       const sourceProps = getProps(source)
       const toIndex = el?.parentElement && Array.from(el?.parentElement.children).indexOf(el)
-      targetProps?.onDrop && targetProps?.onDrop({ fromIndex, toIndex, el, target, source, sibling })
+      const data: any = sourceProps.sendData && sourceProps.sendData({ fromIndex, toIndex, el, target, source, sibling })
+      targetProps?.onDrop && targetProps?.onDrop({ data, fromIndex, toIndex, el, target, source, sibling })
 
-      onDrop && onDrop({ el, target, source, sibling })
+      onDrop && onDrop({ data, fromIndex, toIndex, el, target, source, sibling })
       sourceProps && sourceProps.observe()
       targetProps && targetProps.observe()
 

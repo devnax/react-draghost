@@ -23,7 +23,7 @@ interface Drake {
 export interface WrapperProps {
    instance: Drake;
    id: string;
-   onDrop?: (props: { el: ELE, target: ELE, source: ELE, sibling: ELE }) => void;
+   onDrop?: (props: { data?: any, fromIndex: number | null, toIndex: number | null, el: ELE, target: ELE, source: ELE, sibling: ELE }) => void;
    onDrag?: (props: { el: ELE, source: ELE }) => void;
    onDragend?: (props: { el: ELE }) => void;
    onCalcel?: (props: { el: ELE, container: ELE, source: ELE }) => void;
@@ -66,7 +66,7 @@ export interface DroppableProps {
    invalid?: (props: { el?: ELE, target?: ELE }) => boolean;
    isContainer?: (props: { el?: ELE }) => boolean;
 
-   onDrop?: (props: { fromIndex: number | null, toIndex: number | null, el: ELE, target: ELE, source: ELE, sibling: ELE }) => void;
+   onDrop?: (props: { data?: any, fromIndex: number | null, toIndex: number | null, el: ELE, target: ELE, source: ELE, sibling: ELE }) => void;
    onDrag?: (props: { el: ELE, source: ELE }) => void;
    onDragend?: (props: { el: ELE }) => void;
    onCalcel?: (props: { el: ELE, container: ELE, source: ELE }) => void;
@@ -75,6 +75,9 @@ export interface DroppableProps {
    onOver?: (props: { el: ELE, container: ELE, source: ELE }) => void;
    onOut?: (props: { el: ELE, container: ELE, source: ELE }) => void;
    onCloned?: (props: { clone: ELE, original: ELE, type: 'mirror' | 'copy' }) => void;
+
+   sendData?: (props: { fromIndex: number | null, toIndex: number | null, el: ELE, target: ELE, source: ELE, sibling: ELE }) => any;
+
 }
 
 

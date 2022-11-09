@@ -73,11 +73,19 @@ const App = () => {
               onOut={(props) => {
                 console.log(props);
               }}
+
+              onDrop={({ data }) => {
+                console.log(data);
+
+              }}
             />
           }
           <DropBox
             id="first1"
 
+            sendData={() => {
+              return { ok: 12 }
+            }}
           >
             <div style={{ padding: 10, background: "orange" }}>
               <DropBox
