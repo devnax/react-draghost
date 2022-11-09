@@ -1,70 +1,49 @@
-import { DragulaOptions } from 'dragula'
-
+type ELE = HTMLElement
 
 interface Drake {
-   containers: HTMLElement[];
+   containers: ELE[];
    dragging: boolean;
-   start(item: HTMLElement): void;
+   start(item: ELE): void;
    end(): void;
    cancel(revert?: boolean): void;
-   canMove(item: HTMLElement): boolean;
+   canMove(item: ELE): boolean;
    remove(): void;
-   on(event: 'drag', listener: (el: HTMLElement, source: HTMLElement) => void): Drake;
-   on(event: 'dragend', listener: (el: HTMLElement) => void): Drake;
-   on(event: 'drop', listener: (el: HTMLElement, target: HTMLElement, source: HTMLElement, sibling: HTMLElement) => void): Drake;
+   on(event: 'drag', listener: (el: ELE, source: ELE) => void): Drake;
+   on(event: 'dragend', listener: (el: ELE) => void): Drake;
+   on(event: 'drop', listener: (el: ELE, target: ELE, source: ELE, sibling: ELE) => void): Drake;
    on(
       event: 'cancel' | 'remove' | 'shadow' | 'over' | 'out',
-      listener: (el: HTMLElement, container: HTMLElement, source: HTMLElement) => void,
+      listener: (el: ELE, container: ELE, source: ELE) => void,
    ): Drake;
-   on(event: 'cloned', listener: (clone: HTMLElement, original: HTMLElement, type: 'mirror' | 'copy') => void): Drake;
+   on(event: 'cloned', listener: (clone: ELE, original: ELE, type: 'mirror' | 'copy') => void): Drake;
    destroy(): void;
 }
-
-
-export interface StateProps {
-   fromIndex?: number;
-   toIndex?: number;
-   target?: HTMLElement;
-   source?: HTMLElement;
-   handler?: HTMLElement;
-   el?: HTMLElement;
-   targetSibling?: HTMLElement;
-   sourceSibling?: HTMLElement;
-   shadow?: HTMLElement;
-   clone?: HTMLElement;
-   original?: HTMLElement;
-   type?: 'copy' | 'mirror';
-
-   targetProps?: DroppableProps;
-   sourceProps?: DroppableProps;
-}
-
 
 
 export interface WrapperProps {
    instance: Drake;
    id: string;
-   onDrop?: (props: StateProps) => void;
-   onDrag?: (props: StateProps) => void;
-   onDragend?: (props: StateProps) => void;
-   onCalcel?: (props: StateProps) => void;
-   onRemove?: (props: StateProps) => void;
-   onShadow?: (props: StateProps) => void;
-   onOver?: (props: StateProps) => void;
-   onOut?: (props: StateProps) => void;
-   onCloned?: (props: StateProps) => void;
+   onDrop?: (props: { el: ELE, target: ELE, source: ELE, sibling: ELE }) => void;
+   onDrag?: (props: { el: ELE, source: ELE }) => void;
+   onDragend?: (props: { el: ELE }) => void;
+   onCalcel?: (props: { el: ELE, container: ELE, source: ELE }) => void;
+   onRemove?: (props: { el: ELE, container: ELE, source: ELE }) => void;
+   onShadow?: (props: { el: ELE, container: ELE, source: ELE }) => void;
+   onOver?: (props: { el: ELE, container: ELE, source: ELE }) => void;
+   onOut?: (props: { el: ELE, container: ELE, source: ELE }) => void;
+   onCloned?: (props: { clone: ELE, original: ELE, type: 'mirror' | 'copy' }) => void;
 
-   moves?: (props: StateProps) => boolean;
-   accepts?: (props: StateProps) => boolean;
-   copy?: (props: StateProps) => boolean;
-   invalid?: DragulaOptions['invalid'];
-   isContainer?: DragulaOptions['isContainer'];
+   moves?: (props: { el?: ELE, container?: ELE, handle?: ELE, sibling?: ELE }) => boolean;
+   accepts?: (props: { el: ELE, target: ELE, source: ELE, sibling: ELE }) => boolean;
+   copy?: (props: { el: ELE, source: ELE }) => boolean;
+   invalid?: (props: { el?: ELE, target?: ELE }) => boolean;
+   isContainer?: (props: { el?: ELE }) => boolean;
 
    direction?: 'vertical' | 'horizontal';
    copySortSource?: boolean;
    revertOnSpill?: boolean;
    removeOnSpill?: boolean;
-   mirrorContainer?: HTMLElement;
+   mirrorContainer?: ELE;
    ignoreInputTextSelection?: boolean;
    slideFactorX?: number;
    slideFactorY?: number;
@@ -77,21 +56,25 @@ export interface WrapperProps {
 
 export interface DroppableProps {
    id: string;
-   observe: () => void;
-   moves?: (props: StateProps) => boolean;
-   accepts?: (props: StateProps) => boolean;
-   copy?: DragulaOptions['copy'];
    selfOnly?: boolean;
    disabled?: boolean;
-   onDrop?: (props: StateProps) => void;
-   onDrag?: (props: StateProps) => void;
-   onDragend?: (props: StateProps) => void;
-   onCalcel?: (props: StateProps) => void;
-   onRemove?: (props: StateProps) => void;
-   onShadow?: (props: StateProps) => void;
-   onOver?: (props: StateProps) => void;
-   onOut?: (props: StateProps) => void;
-   onCloned?: (props: StateProps) => void;
+   observe: () => void;
+
+   moves?: (props: { el?: ELE, container?: ELE, handle?: ELE, sibling?: ELE }) => boolean;
+   accepts?: (props: { el: ELE, target: ELE, source: ELE, sibling: ELE }) => boolean;
+   copy?: (props: { el: Element, source: Element }) => boolean;
+   invalid?: (props: { el?: ELE, target?: ELE }) => boolean;
+   isContainer?: (props: { el?: ELE }) => boolean;
+
+   onDrop?: (props: { fromIndex: number | null, toIndex: number | null, el: ELE, target: ELE, source: ELE, sibling: ELE }) => void;
+   onDrag?: (props: { el: ELE, source: ELE }) => void;
+   onDragend?: (props: { el: ELE }) => void;
+   onCalcel?: (props: { el: ELE, container: ELE, source: ELE }) => void;
+   onRemove?: (props: { el: ELE, container: ELE, source: ELE }) => void;
+   onShadow?: (props: { el: ELE, container: ELE, source: ELE }) => void;
+   onOver?: (props: { el: ELE, container: ELE, source: ELE }) => void;
+   onOut?: (props: { el: ELE, container: ELE, source: ELE }) => void;
+   onCloned?: (props: { clone: ELE, original: ELE, type: 'mirror' | 'copy' }) => void;
 }
 
 

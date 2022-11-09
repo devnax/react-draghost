@@ -65,12 +65,13 @@ const App = () => {
           {
             show && <DropBox
               id="first"
+              className="Ok"
               onOver={(props) => {
                 console.log(props);
 
-                if (props.el) {
-                  props.el.style.background = "pink"
-                }
+              }}
+              onOut={(props) => {
+                console.log(props);
               }}
             />
           }
