@@ -19,6 +19,13 @@ const Droppable: FC<Props> = ({ id, children, ...props }) => {
       disabled,
       onDrop,
       onDrag,
+      onDragend,
+      onCalcel,
+      onRemove,
+      onShadow,
+      onOver,
+      onOut,
+      onCloned,
       ...divProps
    } = props
 
@@ -37,6 +44,13 @@ const Droppable: FC<Props> = ({ id, children, ...props }) => {
             disabled,
             onDrop,
             onDrag,
+            onDragend,
+            onCalcel,
+            onRemove,
+            onShadow,
+            onOver,
+            onOut,
+            onCloned
          }
          WrapperFactory.set(wrapper.id, { ...wrapper })
       }

@@ -1,4 +1,4 @@
-import { WrapperProps } from './types'
+import { StateProps, WrapperProps } from './types'
 import { DragulaOptions, Drake } from 'dragula'
 let dragula: (containers: Element[], options?: DragulaOptions) => Drake;
 let currentWrapper: any = null
@@ -38,19 +38,44 @@ export const refreshBuilder = (wrapperId: string) => {
       ...settings
    } = dragulaProps
 
+   const STATE: StateProps = {
+      fromIndex: undefined,
+      toIndex: undefined,
+      target: undefined,
+      source: undefined,
+      handler: undefined,
+      el: undefined,
+      targetSibling: undefined,
+      sourceSibling: undefined,
+      shadow: undefined,
+      clone: undefined,
+      original: undefined,
+      type: undefined,
+      sourceProps: undefined,
+      targetProps: undefined
+   }
+
+
    wrapper.instance && wrapper.instance.destroy()
    WrapperFactory.set(wrapperId, {
       ...wrapper,
       instance: dragula(Array.from(containers), {
          ...settings,
-         accepts: (el, target, source, sibling) => {
+         accepts: (el: HTMLElement, target: HTMLElement, source: HTMLElement, sibling: HTMLElement) => {
             const targetId: any = target?.getAttribute('data-drop') || ""
             const sourceId = source?.getAttribute('data-drop') || ""
-            const targetOptions = droppables[targetId]
+            const targetOptions: any = droppables[targetId]
             const sourceOptions = droppables[sourceId]
-
             const disabled = sourceOptions?.disabled || targetOptions?.disabled
             const selfOnly = sourceOptions?.selfOnly || targetOptions?.selfOnly
+
+            const idx: any = el?.parentNode && Array.from(el.parentNode.children).indexOf(el)
+            if (!isNaN(idx)) {
+               STATE.toIndex = idx
+            }
+            STATE.target = target
+            STATE.targetSibling = sibling
+            STATE.targetProps = targetOptions
 
             if (disabled) {
                return false
@@ -60,59 +85,103 @@ export const refreshBuilder = (wrapperId: string) => {
             }
 
             if (targetOptions && targetOptions.accepts) {
-               return targetOptions.accepts(el, target, source, sibling)
+               return targetOptions.accepts(STATE) as any || false
             }
-            return settings.accepts ? settings.accepts(el, target, source, sibling) : true
+
+            return settings.accepts ? settings.accepts(STATE) as any : true
          },
-         moves: (el, container, handle, sibling) => {
+         moves: (el: HTMLElement, source: HTMLElement, handle: HTMLElement, sibling: HTMLElement) => {
             const sourceId = el?.parentElement?.getAttribute('data-drop') || ""
             const sourceOptions = droppables[sourceId]
+
+            const idx: any = el?.parentNode && Array.from(el.parentNode.children).indexOf(el)
+            if (!isNaN(idx)) {
+               STATE.fromIndex = idx
+            }
+            STATE.source = source
+            STATE.sourceSibling = sibling
+            STATE.handler = handle
+            STATE.el = el
+            STATE.sourceProps = sourceOptions
+
             if (sourceOptions?.disabled) {
                return false
             }
-            return settings.moves ? settings.moves(el, container, handle, sibling) : true
+            return settings.moves ? settings.moves(STATE) as any : true
          }
-      })
+      } as any) as any
    })
    wrapper = WrapperFactory.get(wrapperId) as WrapperProps
 
    const instance = wrapper.instance
-   let fromIndex: any = null
 
-
-   onDragend && instance.on("dragend", onDragend)
-   onCalcel && instance.on("cancel", onCalcel)
-   onRemove && instance.on("remove", onRemove)
-   onShadow && instance.on("shadow", onShadow)
-   onOver && instance.on("over", onOver)
-   onOut && instance.on("out", onOut)
-   onCloned && instance.on("cloned", onCloned)
-
-   instance.on('drag', (el: any, source) => {
-      fromIndex = Array.from(el.parentNode.children).indexOf(el)
-      if (onDrag) {
-         const sourceId: any = source.getAttribute('data-drop')
-         const sourceOptions = droppables[sourceId]
-         sourceOptions.onDrag && sourceOptions.onDrag({ el, source, fromIndex, sourceId })
-         onDrag({ el, source, fromIndex, sourceId })
+   instance.on("dragend", () => {
+      if (STATE.targetProps?.onDragend) {
+         STATE.targetProps?.onDragend(STATE)
       }
+      onDragend && onDragend(STATE)
    })
 
-   instance.on('drop', (el: any, target, source, sibling) => {
-      if (!target) return
-      const sourceId: any = source.getAttribute('data-drop')
-      const targetId: any = target.getAttribute('data-drop')
-      let toIndex = Array.from(el.parentNode.children).indexOf(el)
-      const targetOptions = droppables[targetId]
+   instance.on("cancel", () => {
+      if (STATE.sourceProps?.onCalcel) {
+         STATE.sourceProps?.onCalcel(STATE)
+      }
+      onCalcel && onCalcel(STATE)
+   })
 
-      const args = { el, target, source, sibling, fromIndex, toIndex, sourceId, targetId }
-      targetOptions.onDrop && targetOptions.onDrop(args)
-      onDrop(args)
+   instance.on("remove", () => {
+      if (STATE.sourceProps?.onRemove) {
+         STATE.sourceProps?.onRemove(STATE)
+      }
+      onRemove && onRemove(STATE)
+   })
 
-      if (droppables[sourceId]) droppables[sourceId].observe()
-      if (droppables[targetId]) droppables[targetId].observe()
+   instance.on("shadow", (el) => {
+      STATE.shadow = el
+      if (STATE.targetProps?.onShadow) {
+         STATE.targetProps?.onShadow(STATE)
+      }
+      onShadow && onShadow(STATE)
+   })
 
-      fromIndex = null
+   instance.on("over", () => {
+      if (STATE.targetProps?.onOver) {
+         STATE.targetProps?.onOver(STATE)
+      }
+      onOver && onOver(STATE)
+   })
+   instance.on("out", () => {
+      if (STATE.sourceProps?.onOut) {
+         STATE.sourceProps?.onOut(STATE)
+      }
+      onOut && onOut(STATE)
+   })
+
+   instance.on("cloned", (clone: HTMLElement, original: HTMLElement, type: "copy" | "mirror") => {
+      STATE.clone = clone
+      STATE.original = original
+      STATE.type = type
+
+      if (STATE.sourceProps?.onCloned) {
+         STATE.sourceProps?.onCloned(STATE)
+      }
+      onCloned && onCloned(STATE)
+   })
+
+   instance.on('drag', () => {
+      if (STATE.sourceProps?.onDrag) {
+         STATE.sourceProps?.onDrag(STATE)
+      }
+      onDrag && onDrag(STATE)
+   })
+
+   instance.on('drop', () => {
+      if (STATE.targetProps?.onDrop) {
+         STATE.targetProps?.onDrop(STATE)
+      }
+      onDrop && onDrop(STATE)
+      if (STATE.sourceProps) STATE.sourceProps.observe()
+      if (STATE.targetProps) STATE.targetProps.observe()
 
       setTimeout(() => {
          instance?.destroy()

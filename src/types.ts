@@ -1,14 +1,27 @@
-```tsx
-import {DraggableWrapper, Droppable, DroppableProps, WrapperProps} from 'react-draghost'
-
-<DraggableWrapper id="builder" onDrop={() => {}}>
-   <Droppable id="a">...</Droppable>
-   <Droppable id="b">...</Droppable>
-</DraggableWrapper>
+import { DragulaOptions } from 'dragula'
 
 
+interface Drake {
+   containers: HTMLElement[];
+   dragging: boolean;
+   start(item: HTMLElement): void;
+   end(): void;
+   cancel(revert?: boolean): void;
+   canMove(item: HTMLElement): boolean;
+   remove(): void;
+   on(event: 'drag', listener: (el: HTMLElement, source: HTMLElement) => void): Drake;
+   on(event: 'dragend', listener: (el: HTMLElement) => void): Drake;
+   on(event: 'drop', listener: (el: HTMLElement, target: HTMLElement, source: HTMLElement, sibling: HTMLElement) => void): Drake;
+   on(
+      event: 'cancel' | 'remove' | 'shadow' | 'over' | 'out',
+      listener: (el: HTMLElement, container: HTMLElement, source: HTMLElement) => void,
+   ): Drake;
+   on(event: 'cloned', listener: (clone: HTMLElement, original: HTMLElement, type: 'mirror' | 'copy') => void): Drake;
+   destroy(): void;
+}
 
-interface StateProps {
+
+export interface StateProps {
    fromIndex?: number;
    toIndex?: number;
    target?: HTMLElement;
@@ -28,7 +41,7 @@ interface StateProps {
 
 
 
-interface WrapperProps {
+export interface WrapperProps {
    instance: Drake;
    id: string;
    onDrop?: (props: StateProps) => void;
@@ -62,7 +75,7 @@ interface WrapperProps {
 }
 
 
-interface DroppableProps {
+export interface DroppableProps {
    id: string;
    observe: () => void;
    moves?: (props: StateProps) => boolean;
@@ -80,4 +93,6 @@ interface DroppableProps {
    onOut?: (props: StateProps) => void;
    onCloned?: (props: StateProps) => void;
 }
-```
+
+
+

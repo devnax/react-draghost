@@ -56,7 +56,7 @@ const App = () => {
 
   return (
     <div>
-      <DraggableWrapper id={"main"} onDrop={(p) => {
+      <DraggableWrapper id={"main"} direction="horizontal" onDrop={(p) => {
       }}>
         <div style={{
           display: "flex"
@@ -65,7 +65,13 @@ const App = () => {
           {
             show && <DropBox
               id="first"
+              onOver={(props) => {
+                console.log(props);
 
+                if (props.el) {
+                  props.el.style.background = "pink"
+                }
+              }}
             />
           }
           <DropBox
@@ -77,6 +83,12 @@ const App = () => {
                 selfOnly
                 style={{ padding: 20, background: "skyblue" }}
                 id="child"
+                onShadow={(props) => {
+                  if (props.el) {
+                    props.el.style.background = "blue"
+                  }
+                }}
+
               />
             </div>
           </DropBox>
