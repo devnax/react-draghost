@@ -60,8 +60,7 @@ const Droppable: FC<Props> = ({ id, children, ...props }) => {
 
    useEffect(() => {
       let wrapper = wrapperId && WrapperFactory.get(wrapperId)
-
-      if (wrapper && wrapper.instance) {
+      if (wrapper) {
          refreshBuilder(wrapper.id)
       } else if (!wrapper) {
          let i = 0;

@@ -56,51 +56,54 @@ const App = () => {
 
   return (
     <div>
-      <DraggableWrapper id={"main"} direction="horizontal" onDrop={(p) => {
+      <DraggableWrapper id={"main"} onDrop={(p) => {
       }}>
         <div style={{
           display: "flex"
         }}>
           <button onClick={() => setShow(!show)}>Toggle</button>
           {
-            show && <DropBox
-              id="first"
-              className="Ok"
-              onOver={(props) => {
-                console.log(props);
-
-              }}
-              onOut={(props) => {
-                console.log(props);
-              }}
-
-              onDrop={({ data }) => {
-                console.log(data);
-
-              }}
-            />
-          }
-          <DropBox
-            id="first1"
-
-            sendData={() => {
-              return { ok: 12 }
-            }}
-          >
-            <div style={{ padding: 10, background: "orange" }}>
+            show && <>
               <DropBox
-                selfOnly
-                style={{ padding: 20, background: "skyblue" }}
-                id="child"
-                onShadow={(props) => {
-                  if (props.el) {
-                    props.el.style.background = "blue"
-                  }
+                id="first"
+                className="Ok"
+                onOver={(props) => {
+                  console.log(props);
+
+                }}
+                onOut={(props) => {
+                  console.log(props);
                 }}
 
+                onDrop={({ data }) => {
+                  console.log(data);
+
+                }}
               />
-            </div>
-          </DropBox>
+              <DropBox
+                id="first1"
+
+                sendData={() => {
+                  return { ok: 12 }
+                }}
+              >
+                <div style={{ padding: 10, background: "orange" }}>
+                  <DropBox
+                    selfOnly
+                    style={{ padding: 20, background: "skyblue" }}
+                    id="child"
+                    onShadow={(props) => {
+                      if (props.el) {
+                        props.el.style.background = "blue"
+                      }
+                    }}
+
+                  />
+                </div>
+              </DropBox>
+            </>
+          }
+
         </div>
       </DraggableWrapper >
     </div >
